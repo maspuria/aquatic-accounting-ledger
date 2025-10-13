@@ -3,18 +3,14 @@ package com.pluralsight;
 import java.util.Scanner;
 
 public class Application {
+    private static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        System.out.println("Hi! Capstone Week! Woohoo!");
-        Scanner scanner = new Scanner(System.in);
+
         boolean running = true;
 
         while (running) {
-            System.out.println("==== Home Screen Menu ====");
-            System.out.println("(D) Add Deposit ");
-            System.out.println("(P) Make Payment (Deposit) ");
-            System.out.println("(L) Ledger Menu");
-            System.out.println("(X) Exit ");
-            System.out.print("Enter choice: ");
+            displayHomeScreenMenu();
             String choice = scanner.nextLine().trim().toUpperCase();
 
             switch (choice) {
@@ -38,6 +34,15 @@ public class Application {
         }
         scanner.close();
 
+    }
+
+    public static void displayHomeScreenMenu() {
+        System.out.println("==== Home Screen Menu ====");
+        System.out.println("(D) Add Deposit ");
+        System.out.println("(P) Make Payment (Deposit) ");
+        System.out.println("(L) Ledger Menu");
+        System.out.println("(X) Exit ");
+        System.out.print("Enter choice: ");
     }
 
 }
