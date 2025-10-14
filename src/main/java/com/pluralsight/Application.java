@@ -163,7 +163,7 @@ public class Application {
                     runAllEntries();
                     break;
                 case "D":
-                    System.out.println("Displaying Deposits only"); //feature: runDeposits
+                    runDepositsOnly();
                     break;
                 case "P":
                     System.out.println("Displaying Payments"); // feature: runPayments
@@ -208,6 +208,37 @@ public class Application {
 
     // Ledger Menu Option (D) Display Deposits only
     public static void runDepositsOnly() {
+        try {
+            File file = new File("transactions.csv"); // creating a File object for the transactions.csv file
+            Scanner fileReader = new Scanner(file); // scanner to read the file
+            ArrayList<String> deposits = new ArrayList<>();
+
+            if (fileReader.hasNextLine()) { //necessary to skip over the first header line or error occurs
+                fileReader.nextLine();
+            }
+
+            while (fileReader.hasNextLine()) {
+                String line = fileReader.nextLine();
+                String[] parts = line.split("\\|"); // in order to get the amounts only, it needs to be split into parts
+                double amount = Double.parseDouble(parts[4].trim()); // this gets the last part of the string (amount)
+
+                if (amount > 0) {
+                    deposits.add(line);
+                }
+            }
+            fileReader.close();
+
+            System.out.println("\n==== Aquatic Accounting Ledger ==== ");
+            System.out.println("-------- ALL DEPOSITS ONLY --------- ");
+            int count = 1;
+            for (String deposit : deposits) {
+                System.out.println(count + ": " + deposit);
+                count = count + 1;
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error. Please Try again.");
+            //e.printStackTrace();
+        }
 
     }
 
