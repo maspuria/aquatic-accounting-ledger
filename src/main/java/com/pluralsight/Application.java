@@ -1,9 +1,16 @@
 package com.pluralsight;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Application {
     private static final Scanner scanner = new Scanner(System.in);
+//    public static String transactionFile = "transactions.csv";
+//    public static ArrayList<Transaction> transactions = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -15,7 +22,7 @@ public class Application {
 
             switch (choice) {
                 case "D":
-                    System.out.println("Add Deposit");
+                    addDeposit();
                     break;
                 case "P":
                     System.out.println("Make Payment (Deposit)");
@@ -46,6 +53,62 @@ public class Application {
         System.out.print("Enter choice: ");
     }
 
+    //Home Screen Menu option (D) Add Deposit Method
+    public static void addDeposit() {
+        try {
+            System.out.println("==== Add Deposit ====");
+            String[] dateAndTime = getCurrentDateTime();
+            String date = dateAndTime[0];
+            String time = dateAndTime[1];
+
+            System.out.print("Enter description: "); //ask user for description
+            String description = scanner.nextLine();
+
+            System.out.print("Enter vendor: "); // ask user for vendor
+            String vendor = scanner.nextLine();
+
+            System.out.print("Enter amount: ");//ask user for amount
+            double amount = scanner.nextDouble();
+            scanner.nextLine();
+
+            Transaction deposit = new Transaction(date,time,description,vendor,amount);
+            recordNewTransaction(deposit);
+
+            System.out.println("Thank you for choosing Aquatic Accounting Ledger!");
+            System.out.println("Your Deposit was successfully saved!");
+        }catch (Exception exception){
+            System.out.println("Please try again. Error adding your deposit.");
+            exception.printStackTrace();
+        }
+    }
+    // method for saving a new transaction
+    public static void recordNewTransaction(Transaction transaction) {
+        try{
+            FileWriter writer = new FileWriter("transactions.csv", true);
+            writer.write(transaction.getDate()+ "|" +
+                    transaction.getTime() + "|" +
+                    transaction.getDescription() +"|" +
+                    transaction.getVendor() + "|" +
+                    transaction.getAmount() + "\n");
+            writer.close();
+        } catch (IOException exception) {
+            System.out.println("Error: an unexpected error occurred " );
+        }
+
+    }
+    // method for new transactions for date and time
+    private static String[] getCurrentDateTime(){
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+
+        DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        String dateFormatted = date.format(dateFmt);
+        String timeFormatted = time.format(timeFmt);
+
+        return new String[]{dateFormatted, timeFormatted};
+    }
     // Creating the Ledger Menu
     public static void runLedgerMenu() {
         boolean running = true;
@@ -102,31 +165,28 @@ public class Application {
                 case "1":
                     System.out.println("Display month to date entries..."); // feature: runMonthToDate
                     break;
-                case"2":
+                case "2":
                     System.out.println("Display Previous Month entries..."); // feature: runPreviousMonth
                     break;
                 case "3":
                     System.out.println("Display Year to Date entries..."); // ft: runYearToDate
                     break;
-                case"4":
+                case "4":
                     System.out.println("Display Previous Year entries..."); //ft: runPreviousYear
                     break;
-                case"5":
+                case "5":
                     System.out.println("Searching by vendor..."); // ft: runSearchByVendor
 //                    System.out.println("==== Search by Vendor ====");
 //                    System.out.print("Which vendor transactions would you like to display?");
 //                    System.out.println("Enter Vendor: ");
                     break;
-                case"0":
+                case "0":
                     running = false; // takes user back to the Ledger menu
                     break;
                 default:
                     System.out.println("Invalid entry choice. Enter 1, 2, 3, 4, 5, or 0. Please try again.");
-
             }
-
         }
     }
-
 
 }
