@@ -9,8 +9,6 @@ import java.util.Scanner;
 
 public class Application {
     private static final Scanner scanner = new Scanner(System.in);
-//    public static String transactionFile = "transactions.csv";
-//    public static ArrayList<Transaction> transactions = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -25,7 +23,7 @@ public class Application {
                     addDeposit();
                     break;
                 case "P":
-                    System.out.println("Make Payment (Deposit)");
+                    makePayment();
                     break;
                 case "L":
                     runLedgerMenu();
@@ -45,7 +43,7 @@ public class Application {
 
     // I made my Home Screen Menu into a method so that my main method can be clean and organized
     public static void displayHomeScreenMenu() {
-        System.out.println("==== Home Screen Menu ====");
+        System.out.println("\n ==== Home Screen Menu ====");
         System.out.println("(D) Add Deposit ");
         System.out.println("(P) Make Payment (Deposit) ");
         System.out.println("(L) Ledger Menu");
@@ -56,7 +54,7 @@ public class Application {
     //Home Screen Menu option (D) Add Deposit Method
     public static void addDeposit() {
         try {
-            System.out.println("==== Add Deposit ====");
+            System.out.println("\n ==== Add Deposit ====");
             String[] dateAndTime = getCurrentDateTime();
             String date = dateAndTime[0];
             String time = dateAndTime[1];
@@ -78,6 +76,37 @@ public class Application {
             System.out.println("Your Deposit was successfully saved!");
         }catch (Exception exception){
             System.out.println("Please try again. Error adding your deposit.");
+            exception.printStackTrace();
+        }
+    }
+
+    //Home Screen Menu option (P) Make Payment (Deposit) Method
+    public static void makePayment() {
+        try {
+            System.out.println("\n==== Make Payment (Deposit) ====");
+            String[] dateAndTime = getCurrentDateTime();
+            String date = dateAndTime[0];
+            String time = dateAndTime[1];
+
+            System.out.print("Enter description: "); //ask user for description
+            String description = scanner.nextLine();
+
+            System.out.print("Enter vendor: "); // ask user for vendor
+            String vendor = scanner.nextLine();
+
+            System.out.print("Enter amount: ");//ask user for amount
+            double amount = scanner.nextDouble();
+            scanner.nextLine();
+
+            amount = amount * -1;
+
+            Transaction deposit = new Transaction(date,time,description,vendor,amount);
+            recordNewTransaction(deposit);
+
+            System.out.println("Thank you for choosing Aquatic Accounting Ledger!");
+            System.out.println("Your payment was successfully saved!");
+        }catch (Exception exception){
+            System.out.println("Please try again. Error adding payment.");
             exception.printStackTrace();
         }
     }
@@ -113,7 +142,7 @@ public class Application {
     public static void runLedgerMenu() {
         boolean running = true;
         while (running) {
-            System.out.println("==== Ledger Menu ====");
+            System.out.println("\n ==== Ledger Menu ====");
             System.out.println("(A) Display All Entries ");
             System.out.println("(D) Display Deposits "); // only entries that deposits into the account
             System.out.println("(P) Display Payments "); // only negative entries (payments)
@@ -150,7 +179,7 @@ public class Application {
         boolean running = true;
 
         while (running) {
-            System.out.println(" ==== Reports Menu ==== "); // this menu allows users to run pre-defined reports or run a custom search
+            System.out.println("\n ==== Reports Menu ==== "); // this menu allows users to run pre-defined reports or run a custom search
             System.out.println("(1) Month to Date ");
             System.out.println("(2) Previous Month ");
             System.out.println("(3) Year to Date ");
