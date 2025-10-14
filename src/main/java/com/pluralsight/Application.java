@@ -1,10 +1,13 @@
 package com.pluralsight;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Application {
@@ -41,6 +44,7 @@ public class Application {
 
     }
 
+
     // I made my Home Screen Menu into a method so that my main method can be clean and organized
     public static void displayHomeScreenMenu() {
         System.out.println("\n ==== Home Screen Menu ====");
@@ -69,14 +73,14 @@ public class Application {
             double amount = scanner.nextDouble();
             scanner.nextLine();
 
-            Transaction deposit = new Transaction(date,time,description,vendor,amount);
+            Transaction deposit = new Transaction(date, time, description, vendor, amount);
             recordNewTransaction(deposit);
 
             System.out.println("Thank you for choosing Aquatic Accounting Ledger!");
             System.out.println("Your Deposit was successfully saved!");
-        }catch (Exception exception){
+        } catch (Exception exception) {
             System.out.println("Please try again. Error adding your deposit.");
-            exception.printStackTrace();
+            //exception.printStackTrace();
         }
     }
 
@@ -100,33 +104,35 @@ public class Application {
 
             amount = amount * -1;
 
-            Transaction deposit = new Transaction(date,time,description,vendor,amount);
+            Transaction deposit = new Transaction(date, time, description, vendor, amount);
             recordNewTransaction(deposit);
 
             System.out.println("Thank you for choosing Aquatic Accounting Ledger!");
             System.out.println("Your payment was successfully saved!");
-        }catch (Exception exception){
+        } catch (Exception exception) {
             System.out.println("Please try again. Error adding payment.");
-            exception.printStackTrace();
+            //exception.printStackTrace();
         }
     }
+
     // method for saving a new transaction
     public static void recordNewTransaction(Transaction transaction) {
-        try{
+        try {
             FileWriter writer = new FileWriter("transactions.csv", true);
-            writer.write(transaction.getDate()+ "|" +
+            writer.write(transaction.getDate() + "|" +
                     transaction.getTime() + "|" +
-                    transaction.getDescription() +"|" +
+                    transaction.getDescription() + "|" +
                     transaction.getVendor() + "|" +
                     transaction.getAmount() + "\n");
             writer.close();
         } catch (IOException exception) {
-            System.out.println("Error: an unexpected error occurred " );
+            System.out.println("Error: an unexpected error occurred ");
         }
 
     }
-    // method for new transactions for date and time
-    private static String[] getCurrentDateTime(){
+
+    // method for new transactions for the current date and time
+    private static String[] getCurrentDateTime() {
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
 
@@ -138,6 +144,7 @@ public class Application {
 
         return new String[]{dateFormatted, timeFormatted};
     }
+
     // Creating the Ledger Menu
     public static void runLedgerMenu() {
         boolean running = true;
@@ -154,7 +161,7 @@ public class Application {
 
             switch (choice) {
                 case "A":
-                    System.out.println("Displaying All Entries"); //feature: runAllEntries
+                    runAllEntries();
                     break;
                 case "D":
                     System.out.println("Displaying Deposits only"); //feature: runDeposits
@@ -171,6 +178,32 @@ public class Application {
                 default:
                     System.out.println("Invalid entry choice. Enter A, D, P, R, or H. Please try again.");
             }
+        }
+    }
+
+    // Ledger Menu Option (A) Displaying All Entries
+    public static void runAllEntries() {
+        try {
+            File file = new File("transactions.csv"); // creating a File object for the transactions.csv file
+            Scanner fileReader = new Scanner(file); // scanner to read the file
+            ArrayList<String> transactions = new ArrayList<>();
+
+            while (fileReader.hasNextLine()) {
+                String line = fileReader.nextLine();
+                transactions.add(line);
+            }
+            fileReader.close();
+
+            System.out.println("\n==== Aquatic Accounting Ledger ==== ");
+            System.out.println("-------- ALL TRANSACTIONS --------- ");
+            int count = 1;
+            for (String transaction : transactions) {
+                System.out.println(count + ": " + transaction);
+                count = count + 1;
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error. Please Try again.");
+            //e.printStackTrace();
         }
     }
 
