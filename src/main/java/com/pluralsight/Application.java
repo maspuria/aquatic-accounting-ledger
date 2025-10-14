@@ -44,7 +44,6 @@ public class Application {
 
     }
 
-
     // I made my Home Screen Menu into a method so that my main method can be clean and organized
     public static void displayHomeScreenMenu() {
         System.out.println("\n ==== Home Screen Menu ====");
@@ -205,6 +204,11 @@ public class Application {
             System.out.println("Error. Please Try again.");
             //e.printStackTrace();
         }
+    }
+
+    // Ledger Menu Option (D) Display Deposits only
+    public static void runDepositsOnly() {
+
     }
 
     // Creating the Reports Menu
