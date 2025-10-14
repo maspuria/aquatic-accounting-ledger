@@ -166,7 +166,7 @@ public class Application {
                     runDepositsOnly();
                     break;
                 case "P":
-                    System.out.println("Displaying Payments"); // feature: runPayments
+                    runPaymentsOnly();
                     break;
                 case "R":
                     runReportsMenu();
@@ -206,7 +206,7 @@ public class Application {
         }
     }
 
-    // Ledger Menu Option (D) Display Deposits only
+    // Ledger Menu Option (D) Display Deposits only (positive amounts)
     public static void runDepositsOnly() {
         try {
             File file = new File("transactions.csv"); // creating a File object for the transactions.csv file
@@ -241,6 +241,39 @@ public class Application {
         }
 
     }
+
+    // Ledger Menu Option (P) Displaying Payments only (negative amounts)
+    public static void runPaymentsOnly() {
+        try {
+            File file = new File("transactions.csv");
+            Scanner fileReader = new Scanner(file);
+            ArrayList<String> payments = new ArrayList<>();
+
+            if (fileReader.hasNextLine()) {
+                fileReader.nextLine();
+            }
+            while (fileReader.hasNextLine()) {
+                String line = fileReader.nextLine();
+                String[] parts = line.split("\\|");
+                double amount = Double.parseDouble(parts[4].trim());
+
+                if (amount < 0) {
+                    payments.add(line);
+                }
+            }
+            fileReader.close();
+            System.out.println("\n==== Aquatic Accounting Ledger ==== ");
+            System.out.println("-------- ALL DEPOSITS ONLY --------- ");
+            int count = 1;
+            for (String payment : payments) {
+                System.out.println(count + ": " + payment);
+                count = count + 1;
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error. Please try again.");
+            e.printStackTrace();
+        }
+}
 
     // Creating the Reports Menu
     public static void runReportsMenu() {
