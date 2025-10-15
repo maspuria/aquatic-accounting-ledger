@@ -313,7 +313,27 @@ public class Application {
 
     // Reports Menu option (1) Month to Date method
     public static void runMonthToDate() {
+        System.out.println("\n ===== Month To Date Transactions =====");
 
+        ArrayList<String> monthToDate = new ArrayList<>();
+
+        try {
+            FileReader fileReader = new FileReader("transactions.csv");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+
+            LocalDate today = LocalDate.now();
+
+            while ((line = fileReader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+
+
+            }
+
+
+
+
+        }
 
     }
 
