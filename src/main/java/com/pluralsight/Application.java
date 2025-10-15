@@ -214,8 +214,6 @@ public class Application {
             while ((line = fileReader.readLine()) != null) {
                 String[] parts = line.split("\\|"); // in order to get the amounts only, it needs to be split into parts
 
-                if(parts.length < 5) continue; //just in case there isn't a description for a vendor or missing piece of the data
-
                 double amount = Double.parseDouble(parts[4].trim()); // this gets the last part of the string (amount)
 
                 if (amount > 0) {
@@ -225,7 +223,7 @@ public class Application {
             fileReader.close();
 
             System.out.println("\n==== Aquatic Accounting Ledger ==== ");
-            System.out.println("-------- ALL DEPOSITS ONLY --------- ");
+            System.out.println("-------- ALL DEPOSITS  --------- ");
             int count = 1;
             for (String deposit : deposits) {
                 System.out.println(count + ": " + deposit);
@@ -241,16 +239,13 @@ public class Application {
     // Ledger Menu Option (P) Displaying Payments only (negative amounts)
     public static void runPaymentsOnly() {
         try {
-            File file = new File("transactions.csv");
-            Scanner fileReader = new Scanner(file);
+            BufferedReader fileReader = new BufferedReader(new FileReader("transactions.csv"));
             ArrayList<String> payments = new ArrayList<>();
+            String line;
 
-            if (fileReader.hasNextLine()) {
-                fileReader.nextLine();
-            }
-            while (fileReader.hasNextLine()) {
-                String line = fileReader.nextLine();
+            while ((line = fileReader.readLine()) != null) {
                 String[] parts = line.split("\\|");
+
                 double amount = Double.parseDouble(parts[4].trim());
 
                 if (amount < 0) {
@@ -258,14 +253,15 @@ public class Application {
                 }
             }
             fileReader.close();
+
             System.out.println("\n==== Aquatic Accounting Ledger ==== ");
-            System.out.println("-------- ALL DEPOSITS ONLY --------- ");
+            System.out.println("-------- ALL PAYMENTS --------- ");
             int count = 1;
             for (String payment : payments) {
                 System.out.println(count + ": " + payment);
                 count = count + 1;
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("Error. Please try again.");
             //e.printStackTrace();
         }
