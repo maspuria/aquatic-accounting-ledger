@@ -220,7 +220,7 @@ public class Application {
         }
     }
 
-    // Creating the Reports Menu
+    // The Reports Menu
     public static void displayReportsMenu() {
         boolean running = true;
 
@@ -264,7 +264,7 @@ public class Application {
         }
     }
 
-    // Reports Menu option (1) Month to Date method
+    // Reports Menu option (1) Month to Date
     public static void runMonthToDate() {
         ArrayList<Transaction> transactions = readTransactions();
         ArrayList<Transaction> monthToDate = new ArrayList<>();
@@ -287,6 +287,18 @@ public class Application {
                 count++;
             }
         }
+    }
+
+    // Run Reports Menu Option (2) Previous Month
+    public static void runPreviousMonth() {
+        ArrayList<Transaction> transactions = readTransactions();
+        ArrayList<Transaction> monthToDate = new ArrayList<>();
+
+        LocalDate currentDate = LocalDate.now(); // today's date
+        LocalDate previous = currentDate.minusMonths(1); // 'previous' is holding a month prior to current month
+
+
+
     }
 
     public static ArrayList<Transaction> readTransactions() {
