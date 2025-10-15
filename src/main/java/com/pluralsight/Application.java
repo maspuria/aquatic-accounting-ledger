@@ -207,17 +207,15 @@ public class Application {
     // Ledger Menu Option (D) Display Deposits only (positive amounts)
     public static void runDepositsOnly() {
         try {
-            File file = new File("transactions.csv"); // creating a File object for the transactions.csv file
-            Scanner fileReader = new Scanner(file); // scanner to read the file
+            BufferedReader fileReader = new BufferedReader(new FileReader("transactions.csv"));
             ArrayList<String> deposits = new ArrayList<>();
+            String line;
 
-            if (fileReader.hasNextLine()) { //necessary to skip over the first header line or error occurs
-                fileReader.nextLine();
-            }
-
-            while (fileReader.hasNextLine()) {
-                String line = fileReader.nextLine();
+            while ((line = fileReader.readLine()) != null) {
                 String[] parts = line.split("\\|"); // in order to get the amounts only, it needs to be split into parts
+
+                if(parts.length < 5) continue; //just in case there isn't a description for a vendor or missing piece of the data
+
                 double amount = Double.parseDouble(parts[4].trim()); // this gets the last part of the string (amount)
 
                 if (amount > 0) {
@@ -233,7 +231,7 @@ public class Application {
                 System.out.println(count + ": " + deposit);
                 count = count + 1;
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             System.out.println("Error. Please Try again.");
             //e.printStackTrace();
         }
