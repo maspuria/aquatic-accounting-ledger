@@ -271,7 +271,7 @@ public class Application {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Error. Please try again.");
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 }
 
@@ -318,5 +318,21 @@ public class Application {
             }
         }
     }
+
+    // Reports Menu option (1) Month to Date method
+    public static void runMonthToDate() {
+        try {
+            File file = new File("transactions.csv");
+            Scanner fileReader = new Scanner(file);
+            ArrayList<String> monthToDate = new ArrayList<>();
+
+            if (fileReader.hasNextLine()) {
+                fileReader.nextLine(); // this is helpful to skip the header line
+            }
+        }
+
+    }
+
+
 
 }
