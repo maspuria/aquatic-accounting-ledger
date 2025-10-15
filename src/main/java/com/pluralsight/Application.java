@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Application {
@@ -179,91 +180,43 @@ public class Application {
 
     // Ledger Menu Option (A) Displaying All Entries
     public static void runAllEntries() {
-        try {
-            BufferedReader fileReader = new BufferedReader(new FileReader("transactions.csv"));
-            ArrayList<String> transactions = new ArrayList<>();
-            String line;
+        ArrayList<Transaction> transactions = readTransactions();
 
-            while ((line = fileReader.readLine()) != null) {
-                transactions.add(line);
-            }
-
-            fileReader.close();
-
-            System.out.println("\n==== Aquatic Accounting Ledger ==== ");
-            System.out.println("-------- ALL TRANSACTIONS --------- ");
-            int count = 1;
-            for (String transaction : transactions) {
-                System.out.println(count + ": " + transaction);
-                count = count + 1;
-            }
-
-        } catch (IOException e) {
-            System.out.println("Error. Please Try again.");
-            //e.printStackTrace();
+        System.out.println("\n==== Aquatic Accounting Ledger ==== ");
+        System.out.println("-------- ALL TRANSACTIONS --------- ");
+        int count = 1;
+        for (Transaction t : transactions) {
+            System.out.println(count + ": " + t);
+            count = count + 1;
         }
     }
 
     // Ledger Menu Option (D) Display Deposits only (positive amounts)
     public static void runDepositsOnly() {
-        try {
-            BufferedReader fileReader = new BufferedReader(new FileReader("transactions.csv"));
-            ArrayList<String> deposits = new ArrayList<>();
-            String line;
+        ArrayList<Transaction> transactions = readTransactions();
 
-            while ((line = fileReader.readLine()) != null) {
-                String[] parts = line.split("\\|"); // in order to get the amounts only, it needs to be split into parts
-
-                double amount = Double.parseDouble(parts[4].trim()); // this gets the last part of the string (amount)
-
-                if (amount > 0) {
-                    deposits.add(line);
-                }
-            }
-            fileReader.close();
-
-            System.out.println("\n==== Aquatic Accounting Ledger ==== ");
-            System.out.println("-------- ALL DEPOSITS  --------- ");
-            int count = 1;
-            for (String deposit : deposits) {
-                System.out.println(count + ": " + deposit);
+        System.out.println("\n==== Aquatic Accounting Ledger ==== ");
+        System.out.println("-------- ALL DEPOSITS ONLY --------- ");
+        int count = 1;
+        for (Transaction t : transactions) {
+            if (t.getAmount() > 0) {
+                System.out.println(count + ": " + t);
                 count = count + 1;
             }
-        } catch (IOException e) {
-            System.out.println("Error. Please Try again.");
-            //e.printStackTrace();
         }
-
     }
 
     // Ledger Menu Option (P) Displaying Payments only (negative amounts)
     public static void runPaymentsOnly() {
-        try {
-            BufferedReader fileReader = new BufferedReader(new FileReader("transactions.csv"));
-            ArrayList<String> payments = new ArrayList<>();
-            String line;
-
-            while ((line = fileReader.readLine()) != null) {
-                String[] parts = line.split("\\|");
-
-                double amount = Double.parseDouble(parts[4].trim());
-
-                if (amount < 0) {
-                    payments.add(line);
-                }
-            }
-            fileReader.close();
-
-            System.out.println("\n==== Aquatic Accounting Ledger ==== ");
-            System.out.println("-------- ALL PAYMENTS --------- ");
-            int count = 1;
-            for (String payment : payments) {
-                System.out.println(count + ": " + payment);
+        ArrayList<Transaction> transactions = readTransactions();
+        System.out.println("\n==== Aquatic Accounting Ledger ==== ");
+        System.out.println("-------- ALL PAYMENTS ONLY --------- ");
+        int count = 1;
+        for (Transaction t : transactions) {
+            if (t.getAmount() < 0) {
+                System.out.println(count + ": " + t);
                 count = count + 1;
             }
-        } catch (IOException e) {
-            System.out.println("Error. Please try again.");
-            //e.printStackTrace();
         }
     }
 
@@ -285,7 +238,7 @@ public class Application {
 
             switch (choice) {
                 case "1":
-                    System.out.println("Display month to date entries..."); // feature: runMonthToDate
+                    runMonthToDate();
                     break;
                 case "2":
                     System.out.println("Display Previous Month entries..."); // feature: runPreviousMonth
@@ -313,28 +266,52 @@ public class Application {
 
     // Reports Menu option (1) Month to Date method
     public static void runMonthToDate() {
+        ArrayList<Transaction> transactions = readTransactions();
+        ArrayList<Transaction> monthToDate = new ArrayList<>();
         System.out.println("\n ===== Month To Date Transactions =====");
 
-        ArrayList<String> monthToDate = new ArrayList<>();
-
-        try {
-            FileReader fileReader = new FileReader("transactions.csv");
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-
-            LocalDate today = LocalDate.now();
-
-            while ((line = fileReader.readLine()) != null) {
-                String[] parts = line.split("\\|");
-
-
+        LocalDate currentDate = LocalDate.now();
+        for (Transaction t: transactions) {
+            LocalDate entryDate = LocalDate.parse(t.getDate());
+            if (entryDate.getMonthValue() == currentDate.getMonthValue() &&
+                    entryDate.getYear() == currentDate.getYear()) {
+                monthToDate.add(t);
             }
-
-
-
-
         }
+        if (monthToDate.isEmpty()) {
+            System.out.println("There are no transactions for this month yet.");
+        } else {
+            int count = 1;
+            for (Transaction t: monthToDate) {
+                System.out.println(count + ":" + t);
+                count++;
+            }
+        }
+    }
 
+    public static ArrayList<Transaction> readTransactions() {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
+            String line;
+            reader.readLine();
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+                if (parts.length == 5) {
+                    String date = parts[0].trim();
+                    String time = parts[1].trim();
+                    String description = parts[2].trim();
+                    String vendor = parts[3].trim();
+                    double amount = Double.parseDouble(parts[4].trim());
+                    transactions.add(new Transaction(date, time, description, vendor, amount));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Error reading transactions.csv file: " + e.getMessage());
+        }
+        Collections.reverse(transactions);
+        return transactions;
     }
 
 
