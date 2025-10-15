@@ -23,13 +23,13 @@ public class Application {
 
             switch (choice) {
                 case "D":
-                    addDeposit();
+                    runAddDeposit();
                     break;
                 case "P":
-                    makePayment();
+                    runMakePayment();
                     break;
                 case "L":
-                    runLedgerMenu();
+                    displayLedgerMenu();
                     break;
                 case "X":
                     System.out.println("You selected Exit. Thank you for using Aquatic Accounting Ledger... Goodbye!");
@@ -55,7 +55,7 @@ public class Application {
     }
 
     //Home Screen Menu option (D) Add Deposit Method
-    public static void addDeposit() {
+    public static void runAddDeposit() {
         try {
             System.out.println("\n ==== Add Deposit ====");
             String[] dateAndTime = getCurrentDateTime();
@@ -84,7 +84,7 @@ public class Application {
     }
 
     //Home Screen Menu option (P) Make Payment (Deposit) Method
-    public static void makePayment() {
+    public static void runMakePayment() {
         try {
             System.out.println("\n==== Make Payment (Deposit) ====");
             String[] dateAndTime = getCurrentDateTime();
@@ -145,7 +145,7 @@ public class Application {
     }
 
     // Creating the Ledger Menu
-    public static void runLedgerMenu() {
+    public static void displayLedgerMenu() {
         boolean running = true;
         while (running) {
             System.out.println("\n ==== Ledger Menu ====");
@@ -169,7 +169,7 @@ public class Application {
                     runPaymentsOnly();
                     break;
                 case "R":
-                    runReportsMenu();
+                    displayReportsMenu();
                     break;
                 case "H":
                     running = false; // this will exit the ledger menu and take you back to the home screen menu
@@ -276,7 +276,7 @@ public class Application {
 }
 
     // Creating the Reports Menu
-    public static void runReportsMenu() {
+    public static void displayReportsMenu() {
         boolean running = true;
 
         while (running) {
@@ -329,7 +329,10 @@ public class Application {
             if (fileReader.hasNextLine()) {
                 fileReader.nextLine(); // this is helpful to skip the header line
             }
+
+        } catch () {
         }
+
 
     }
 
