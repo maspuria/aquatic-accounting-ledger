@@ -1,9 +1,6 @@
 package com.pluralsight;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -183,14 +180,14 @@ public class Application {
     // Ledger Menu Option (A) Displaying All Entries
     public static void runAllEntries() {
         try {
-            File file = new File("transactions.csv"); // creating a File object for the transactions.csv file
-            Scanner fileReader = new Scanner(file); // scanner to read the file
+            BufferedReader fileReader = new BufferedReader(new FileReader("transactions.csv"));
             ArrayList<String> transactions = new ArrayList<>();
+            String line;
 
-            while (fileReader.hasNextLine()) {
-                String line = fileReader.nextLine();
+            while ((line = fileReader.readLine()) != null) {
                 transactions.add(line);
             }
+
             fileReader.close();
 
             System.out.println("\n==== Aquatic Accounting Ledger ==== ");
@@ -200,7 +197,8 @@ public class Application {
                 System.out.println(count + ": " + transaction);
                 count = count + 1;
             }
-        } catch (FileNotFoundException e) {
+
+        } catch (IOException e) {
             System.out.println("Error. Please Try again.");
             //e.printStackTrace();
         }
@@ -273,7 +271,7 @@ public class Application {
             System.out.println("Error. Please try again.");
             //e.printStackTrace();
         }
-}
+    }
 
     // Creating the Reports Menu
     public static void displayReportsMenu() {
@@ -321,21 +319,9 @@ public class Application {
 
     // Reports Menu option (1) Month to Date method
     public static void runMonthToDate() {
-        try {
-            File file = new File("transactions.csv");
-            Scanner fileReader = new Scanner(file);
-            ArrayList<String> monthToDate = new ArrayList<>();
-
-            if (fileReader.hasNextLine()) {
-                fileReader.nextLine(); // this is helpful to skip the header line
-            }
-
-        } catch () {
-        }
 
 
     }
-
 
 
 }
