@@ -244,7 +244,7 @@ public class Application {
                     runPreviousMonth();
                     break;
                 case "3":
-                    System.out.println("Display Year to Date entries..."); // ft: runYearToDate
+                    runYearToDate();
                     break;
                 case "4":
                     System.out.println("Display Previous Year entries..."); //ft: runPreviousYear
@@ -270,7 +270,7 @@ public class Application {
         ArrayList<Transaction> monthToDate = new ArrayList<>();
 
         LocalDate currentDate = LocalDate.now();
-        for (Transaction t: transactions) {
+        for (Transaction t : transactions) {
             LocalDate entryDate = LocalDate.parse(t.getDate());
 
             if (entryDate.getMonthValue() == currentDate.getMonthValue() &&
@@ -283,7 +283,7 @@ public class Application {
             System.out.println("There are no transactions for this month yet.");
         } else {
             int count = 1;
-            for (Transaction t: monthToDate) {
+            for (Transaction t : monthToDate) {
                 System.out.println(count + ":" + t);
                 count++;
             }
@@ -300,25 +300,50 @@ public class Application {
         int lastMonth = prevMonthDate.getMonthValue(); // holds the month number
         int lastMonthsYear = prevMonthDate.getYear(); // holds the last months year
 
-        for (Transaction t: transactions) {
-                LocalDate entryDate = LocalDate.parse(t.getDate().trim());
+        for (Transaction t : transactions) {
+            LocalDate entryDate = LocalDate.parse(t.getDate().trim());
 
-                if (entryDate.getMonthValue() == lastMonth &&
-                        entryDate.getYear() == lastMonthsYear) {
-                    previousMonth.add(t);
-                }
+            if (entryDate.getMonthValue() == lastMonth &&
+                    entryDate.getYear() == lastMonthsYear) {
+                previousMonth.add(t);
+            }
         }
         System.out.println("\n ===== Previous Month Transactions =====");
         if (previousMonth.isEmpty()) {
             System.out.println("There are no previous month transactions.");
         } else {
             int count = 1;
-            for (Transaction t: previousMonth) {
+            for (Transaction t : previousMonth) {
                 System.out.println(count + ": " + t);
                 count++;
             }
         }
+    }
+    // Reports Menu Option (3) Year to Date Transactions
+    public static void runYearToDate() {
+        ArrayList<Transaction> transactions = readTransactions();
+        ArrayList<Transaction> yearToDate = new ArrayList<>();
 
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
+
+        System.out.println("\n ===== Year to Date Transactions =====");
+
+        for (Transaction t : transactions) {
+            LocalDate entryDate = LocalDate.parse(t.getDate());
+            if (entryDate.getYear() == currentYear) {
+                yearToDate.add(t);
+            }
+        }
+        if (yearToDate.isEmpty()) {
+            System.out.println("There are no transactions for this year yet.");
+        } else {
+            int count = 1;
+            for (Transaction t : yearToDate) {
+                System.out.println(count + ": " + t);
+                count++;
+            }
+        }
     }
 
     public static ArrayList<Transaction> readTransactions() {
