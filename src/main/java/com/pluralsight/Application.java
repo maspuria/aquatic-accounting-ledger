@@ -247,7 +247,7 @@ public class Application {
                     runYearToDate();
                     break;
                 case "4":
-                    System.out.println("Display Previous Year entries..."); //ft: runPreviousYear
+                    runPreviousYear();
                     break;
                 case "5":
                     System.out.println("Searching by vendor..."); // ft: runSearchByVendor
@@ -340,6 +340,34 @@ public class Application {
         } else {
             int count = 1;
             for (Transaction t : yearToDate) {
+                System.out.println(count + ": " + t);
+                count++;
+            }
+        }
+    }
+
+    // Reports Menu Option (4) Previous Year transactions
+    public static void runPreviousYear() {
+        ArrayList<Transaction> transactions = readTransactions();
+        ArrayList<Transaction> previousYearTransactions = new ArrayList<>();
+
+        LocalDate currentDate = LocalDate.now();
+        int currentYear = currentDate.getYear();
+
+        int previousYear = currentYear - 1;
+
+        System.out.println("\n ===== Previous Year Transactions =====");
+        for (Transaction t: transactions) {
+            LocalDate entryDate = LocalDate.parse(t.getDate());
+            if (entryDate.getYear() == previousYear) {
+                previousYearTransactions.add(t);
+            }
+        }
+        if (previousYearTransactions.isEmpty()) {
+            System.out.println("There are no transactions from last year.");
+        } else {
+            int count = 1;
+            for (Transaction t: previousYearTransactions) {
                 System.out.println(count + ": " + t);
                 count++;
             }
