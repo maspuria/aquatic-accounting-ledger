@@ -44,12 +44,13 @@ public class Application {
 
     // I made my Home Screen Menu into a method so that my main method can be clean and organized
     public static void displayHomeScreenMenu() {
-        System.out.println("\n------- Home Screen Menu -------");
-        System.out.println(" (D) Add Deposit ");
-        System.out.println(" (P) Make Payment (Deposit) ");
-        System.out.println(" (L) Ledger Menu");
-        System.out.println(" (X) Exit ");
-        System.out.println(" Enter choice: ");
+        System.out.println("\n ╔═══════ Home Screen Menu ═════╗");
+        System.out.println(" ║ (D) Add Deposit ");
+        System.out.println(" ║ (P) Make Payment (Deposit) ");
+        System.out.println(" ║ (L) Ledger Menu");
+        System.out.println(" ║ (X) Exit ");
+        System.out.println(" ╚══════════════════════════════╝");
+        System.out.print(" Enter choice: ");
 
     }
 
@@ -147,12 +148,13 @@ public class Application {
     public static void displayLedgerMenu() {
         boolean running = true;
         while (running) {
-            System.out.println("\n------- Ledger Menu -------");
-            System.out.println(" (A) Display All Entries ");
-            System.out.println(" (D) Display Deposits "); // only entries that deposits into the account
-            System.out.println(" (P) Display Payments "); // only negative entries (payments)
-            System.out.println(" (R) Reports "); // another menu screen that allows custom searches
-            System.out.println(" (H) Home"); // takes you back to the original home screen menu
+            System.out.println("\n ╔════════ Ledger Menu ════════╗");
+            System.out.println(" ║ (A) Display All Entries ");
+            System.out.println(" ║ (D) Display Deposits "); // only entries that deposits into the account
+            System.out.println(" ║ (P) Display Payments "); // only negative entries (payments)
+            System.out.println(" ║ (R) Reports "); // another menu screen that allows custom searches
+            System.out.println(" ║ (H) Home"); // takes you back to the original home screen menu
+            System.out.println(" ╚═════════════════════════════╝");
             System.out.print(" Enter choice: ");
 
             String choice = scanner.nextLine().trim().toUpperCase();
@@ -226,13 +228,14 @@ public class Application {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n ------ Reports Menu ------ "); // this menu allows users to run pre-defined reports or run a custom search
-            System.out.println(" (1) Month to Date ");
-            System.out.println(" (2) Previous Month ");
-            System.out.println(" (3) Year to Date ");
-            System.out.println(" (4) Previous Year ");
-            System.out.println(" (5) Search by Vendor "); // prompt user for vendor name and display all entries for that vendor
-            System.out.println(" (0) Back "); // takes user back to Ledger Menu
+            System.out.println("\n ╔════════ Reports Menu ════════╗"); // this menu allows users to run pre-defined reports or run a custom search
+            System.out.println(" ║ (1) Month to Date ");
+            System.out.println(" ║ (2) Previous Month ");
+            System.out.println(" ║ (3) Year to Date ");
+            System.out.println(" ║ (4) Previous Year ");
+            System.out.println(" ║ (5) Search by Vendor "); // prompt user for vendor name and display all entries for that vendor
+            System.out.println(" ║ (0) Back "); // takes user back to Ledger Menu
+            System.out.println(" ╚══════════════════════════════╝");
             System.out.print(" Enter choice: ");
 
             String choice = scanner.nextLine().trim(); // doesn't need toUpperCase() bc user choice will be numerical entries
@@ -382,9 +385,10 @@ public class Application {
         ArrayList<Transaction> transactions = readTransactions();
         ArrayList<Transaction> vendorMatches = new ArrayList<>();
 
-        System.out.println("\n ===== Search by Vendor =====");
-        System.out.println("Which vendor transactions would you like to display?");
-        System.out.print("Enter Vendor: ");
+        System.out.println("\n ╔═══════════════════ Search by Vendor ═══════════════════╗");
+        System.out.println(" ║ Which vendor transactions would you like to display?");
+        System.out.println(" ╚════════════════════════════════════════════════════════╝");
+        System.out.print(" Enter Vendor: ");
         String searchByVendor = scanner.nextLine().trim().toUpperCase();
 
         for (Transaction t : transactions) {
