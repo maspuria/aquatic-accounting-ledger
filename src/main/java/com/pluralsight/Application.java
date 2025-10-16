@@ -250,10 +250,7 @@ public class Application {
                     runPreviousYear();
                     break;
                 case "5":
-                    System.out.println("Searching by vendor..."); // ft: runSearchByVendor
-//                    System.out.println("==== Search by Vendor ====");
-//                    System.out.print("Which vendor transactions would you like to display?");
-//                    System.out.println("Enter Vendor: ");
+                    runSearchByVendor();
                     break;
                 case "0":
                     running = false; // takes user back to the Ledger menu
@@ -319,6 +316,7 @@ public class Application {
             }
         }
     }
+
     // Reports Menu Option (3) Year to Date Transactions
     public static void runYearToDate() {
         ArrayList<Transaction> transactions = readTransactions();
@@ -357,7 +355,7 @@ public class Application {
         int previousYear = currentYear - 1;
 
         System.out.println("\n ===== Previous Year Transactions =====");
-        for (Transaction t: transactions) {
+        for (Transaction t : transactions) {
             LocalDate entryDate = LocalDate.parse(t.getDate());
             if (entryDate.getYear() == previousYear) {
                 previousYearTransactions.add(t);
@@ -367,7 +365,35 @@ public class Application {
             System.out.println("There are no transactions from last year.");
         } else {
             int count = 1;
-            for (Transaction t: previousYearTransactions) {
+            for (Transaction t : previousYearTransactions) {
+                System.out.println(count + ": " + t);
+                count++;
+            }
+        }
+    }
+
+    // Reports Menu Option (5) Search by Vendor
+    public static void runSearchByVendor() {
+        ArrayList<Transaction> transactions = readTransactions();
+        ArrayList<Transaction> vendorMatches = new ArrayList<>();
+
+        System.out.println("\n ===== Search by Vendor =====");
+        System.out.println("Which vendor transactions would you like to display?");
+        System.out.print("Enter Vendor: ");
+        String searchByVendor = scanner.nextLine().trim().toUpperCase();
+
+        for (Transaction t : transactions) {
+            String vendorEntry = t.getVendor().toUpperCase();
+            if (vendorEntry.contains(searchByVendor)) {
+                vendorMatches.add(t);
+            }
+        }
+        if (vendorMatches.isEmpty()) {
+            System.out.println("There are no transactions for the vendor you entered.");
+        } else {
+            System.out.println("\n ===== Transactions for " + searchByVendor + " =====");
+            int count = 1;
+            for (Transaction t: vendorMatches) {
                 System.out.println(count + ": " + t);
                 count++;
             }
