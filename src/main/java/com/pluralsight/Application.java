@@ -30,7 +30,9 @@ public class Application {
                     displayLedgerMenu();
                     break;
                 case "X":
-                    System.out.println("You selected Exit. Thank you for using Aquatic Accounting Ledger... Goodbye!");
+                    System.out.println("\n ╔═════════════════════════════════════════════════════════════════════╗ ");
+                    System.out.println(" ║          Thank you for using Aquatic Accounting! Goodbye!");
+                    System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
                     running = false;
                     break;
                 default:
@@ -57,26 +59,28 @@ public class Application {
     //Home Screen Menu option (D) Add Deposit Method
     public static void runAddDeposit() {
         try {
-            System.out.println("\n ==== Add Deposit ====");
+            System.out.println("\n ════════════════ Add Deposit ═══════════════");
+            System.out.print(" Enter description: "); //ask user for description
+            String description = scanner.nextLine();
+
+            System.out.print(" Enter vendor: "); // ask user for vendor
+            String vendor = scanner.nextLine();
+
+            System.out.print(" Enter amount: ");//ask user for amount
+            double amount = scanner.nextDouble();
+            scanner.nextLine();
+
             String[] dateAndTime = getCurrentDateTime();
             String date = dateAndTime[0];
             String time = dateAndTime[1];
 
-            System.out.print("Enter description: "); //ask user for description
-            String description = scanner.nextLine();
-
-            System.out.print("Enter vendor: "); // ask user for vendor
-            String vendor = scanner.nextLine();
-
-            System.out.print("Enter amount: ");//ask user for amount
-            double amount = scanner.nextDouble();
-            scanner.nextLine();
-
             Transaction deposit = new Transaction(date, time, description, vendor, amount);
             recordNewTransaction(deposit);
 
-            System.out.println("Thank you for choosing Aquatic Accounting Ledger!");
-            System.out.println("Your Deposit was successfully saved!");
+            System.out.println("═══════════════════════════════════════════════════════");
+            System.out.println("  Thank you for choosing Aquatic Accounting Ledger!");
+            System.out.println("  Your Deposit was successfully saved!");
+            System.out.println("═══════════════════════════════════════════════════════");
         } catch (Exception exception) {
             System.out.println("Please try again. Error adding your deposit.");
             //exception.printStackTrace();
@@ -86,7 +90,7 @@ public class Application {
     //Home Screen Menu option (P) Make Payment (Deposit) Method
     public static void runMakePayment() {
         try {
-            System.out.println("\n==== Make Payment (Deposit) ====");
+            System.out.println("\n════════════════ Make Payment (Deposit) ════════════════");
             String[] dateAndTime = getCurrentDateTime();
             String date = dateAndTime[0];
             String time = dateAndTime[1];
@@ -106,8 +110,10 @@ public class Application {
             Transaction deposit = new Transaction(date, time, description, vendor, amount);
             recordNewTransaction(deposit);
 
-            System.out.println("Thank you for choosing Aquatic Accounting Ledger!");
-            System.out.println("Your payment was successfully saved!");
+            System.out.println("═══════════════════════════════════════════════════════");
+            System.out.println("  Thank you for choosing Aquatic Accounting Ledger!");
+            System.out.println("  Your Payment was successfully saved!");
+            System.out.println("═══════════════════════════════════════════════════════");
         } catch (Exception exception) {
             System.out.println("Please try again. Error adding payment.");
             //exception.printStackTrace();
@@ -185,8 +191,9 @@ public class Application {
     public static void runAllEntries() {
         ArrayList<Transaction> transactions = readTransactions();
 
-        System.out.println("\n==================== Aquatic Accounting Ledger ==================== ");
-        System.out.println("------------------------ ALL TRANSACTIONS ------------------------ ");
+        System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
+        System.out.println(" ║                         ALL TRANSACTIONS ");
+        System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
         int count = 1;
         for (Transaction t : transactions) {
             System.out.println(count + ": " + t);
@@ -198,8 +205,9 @@ public class Application {
     public static void runDepositsOnly() {
         ArrayList<Transaction> transactions = readTransactions();
 
-        System.out.println("\n==================== Aquatic Accounting Ledger ==================== ");
-        System.out.println("------------------------ ALL DEPOSITS ONLY ------------------------ ");
+        System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
+        System.out.println(" ║                         ALL DEPOSITS ONLY ");
+        System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
         int count = 1;
         for (Transaction t : transactions) {
             if (t.getAmount() > 0) {
@@ -212,8 +220,11 @@ public class Application {
     // Ledger Menu Option (P) Displaying Payments only (negative amounts)
     public static void runPaymentsOnly() {
         ArrayList<Transaction> transactions = readTransactions();
-        System.out.println("\n==================== Aquatic Accounting Ledger ==================== ");
-        System.out.println("------------------------ ALL PAYMENTS ONLY ------------------------ ");
+
+        System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
+        System.out.println(" ║                         ALL PAYMENTS ONLY ");
+        System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
+
         int count = 1;
         for (Transaction t : transactions) {
             if (t.getAmount() < 0) {
@@ -279,8 +290,10 @@ public class Application {
                 monthToDate.add(t);
             }
         }
-        System.out.println("\n==================== Aquatic Accounting Ledger ==================== ");
-        System.out.println("-------------------- Month To Date Transactions -------------------");
+        System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
+        System.out.println(" ║                           MONTH TO DATE ");
+        System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
+
         if (monthToDate.isEmpty()) {
             System.out.println("There are no transactions for this month yet.");
         } else {
@@ -310,8 +323,9 @@ public class Application {
                 previousMonth.add(t);
             }
         }
-        System.out.println("\n==================== Aquatic Accounting Ledger ==================== ");
-        System.out.println("-------------------- Previous Month Transactions ------------------");
+        System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
+        System.out.println(" ║                           PREVIOUS MONTH ");
+        System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
         if (previousMonth.isEmpty()) {
             System.out.println("There are no previous month transactions.");
         } else {
@@ -330,9 +344,9 @@ public class Application {
 
         LocalDate currentDate = LocalDate.now();
         int currentYear = currentDate.getYear();
-
-        System.out.println("\n==================== Aquatic Accounting Ledger ==================== ");
-        System.out.println("-------------------- Year To Date Transactions -------------------");
+        System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
+        System.out.println(" ║                           YEAR TO DATE ");
+        System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
 
         for (Transaction t : transactions) {
             LocalDate entryDate = LocalDate.parse(t.getDate());
@@ -360,9 +374,9 @@ public class Application {
         int currentYear = currentDate.getYear();
 
         int previousYear = currentYear - 1;
-
-        System.out.println("\n==================== Aquatic Accounting Ledger ==================== ");
-        System.out.println("-------------------- Previous Year Transactions -------------------");
+        System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
+        System.out.println(" ║                           PREVIOUS YEAR ");
+        System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
         for (Transaction t : transactions) {
             LocalDate entryDate = LocalDate.parse(t.getDate());
             if (entryDate.getYear() == previousYear) {
@@ -400,8 +414,9 @@ public class Application {
         if (vendorMatches.isEmpty()) {
             System.out.println("There are no transactions for the vendor you entered.");
         } else {
-            System.out.println("\n==================== Aquatic Accounting Ledger ==================== ");
-            System.out.println("--------------------- Transactions for "+ searchByVendor + " --------------------");
+            System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
+            System.out.println(" ║                      Transactions for " + searchByVendor );
+            System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
             int count = 1;
             for (Transaction t: vendorMatches) {
                 System.out.println(count + ": " + t);
