@@ -1,2 +1,0 @@
-# Aquatic Accounting Ledger
-## Capstone 
