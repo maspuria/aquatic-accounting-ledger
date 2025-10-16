@@ -241,7 +241,7 @@ public class Application {
                     runMonthToDate();
                     break;
                 case "2":
-                    System.out.println("Display Previous Month entries..."); // feature: runPreviousMonth
+                    runPreviousMonth();
                     break;
                 case "3":
                     System.out.println("Display Year to Date entries..."); // ft: runYearToDate
@@ -268,16 +268,17 @@ public class Application {
     public static void runMonthToDate() {
         ArrayList<Transaction> transactions = readTransactions();
         ArrayList<Transaction> monthToDate = new ArrayList<>();
-        System.out.println("\n ===== Month To Date Transactions =====");
 
         LocalDate currentDate = LocalDate.now();
         for (Transaction t: transactions) {
             LocalDate entryDate = LocalDate.parse(t.getDate());
+
             if (entryDate.getMonthValue() == currentDate.getMonthValue() &&
                     entryDate.getYear() == currentDate.getYear()) {
                 monthToDate.add(t);
             }
         }
+        System.out.println("\n ===== Month To Date Transactions =====");
         if (monthToDate.isEmpty()) {
             System.out.println("There are no transactions for this month yet.");
         } else {
@@ -292,12 +293,31 @@ public class Application {
     // Run Reports Menu Option (2) Previous Month
     public static void runPreviousMonth() {
         ArrayList<Transaction> transactions = readTransactions();
-        ArrayList<Transaction> monthToDate = new ArrayList<>();
+        ArrayList<Transaction> previousMonth = new ArrayList<>();
 
         LocalDate currentDate = LocalDate.now(); // today's date
-        LocalDate previous = currentDate.minusMonths(1); // 'previous' is holding a month prior to current month
+        LocalDate prevMonthDate = currentDate.minusMonths(1); // 'previous' is holding a month prior to current month
+        int lastMonth = prevMonthDate.getMonthValue(); // holds the month number
+        int lastMonthsYear = prevMonthDate.getYear(); // holds the last months year
 
+        for (Transaction t: transactions) {
+                LocalDate entryDate = LocalDate.parse(t.getDate().trim());
 
+                if (entryDate.getMonthValue() == lastMonth &&
+                        entryDate.getYear() == lastMonthsYear) {
+                    previousMonth.add(t);
+                }
+        }
+        System.out.println("\n ===== Previous Month Transactions =====");
+        if (previousMonth.isEmpty()) {
+            System.out.println("There are no previous month transactions.");
+        } else {
+            int count = 1;
+            for (Transaction t: previousMonth) {
+                System.out.println(count + ": " + t);
+                count++;
+            }
+        }
 
     }
 
