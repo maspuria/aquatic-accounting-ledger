@@ -198,27 +198,19 @@ public class Application {
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
             String line;
-
             reader.readLine(); // important to skip the header of csv file
-
             while ((line = reader.readLine()) != null) { //keeps reading until readLine() returns null
-
                 String[] parts = line.split("\\|");
-
                 if (parts.length == 5) { // use if statement to make sure there is 5 parts
                     String date = parts[0].trim(); // index 0 = date
                     String time = parts[1].trim();
                     String description = parts[2].trim();
                     String vendor = parts[3].trim();
-
-                    // parse amount string to double
-                    double amount = Double.parseDouble(parts[4].trim());
-
+                    double amount = Double.parseDouble(parts[4].trim()); // parse amount string to double
                     // creates a new Transaction object with this data and adds it to ArrayList
                     transactions.add(new Transaction(date, time, description, vendor, amount));
                 }
             }
-
         } catch (IOException e) {
             System.out.println("Error reading transactions.csv file: " + e.getMessage());
         }
