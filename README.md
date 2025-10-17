@@ -29,14 +29,32 @@ and organized way.
   - **Previous Month** transactions
   - **Year to Date** transactions
   - **Previous Year** transactions
-  - **Search by Vendor** allows the user to find all transactions for a specific name or business.
+  - **Search by Vendor** allows the user to find all
+transactions for a specific name or business.
 
 #### File Handling
-- All data is saved persistently inside `transactions.csv` using **FileWriter** and **BufferedReader**.
+- All data is saved persistently inside `transactions.csv` 
+using **FileWriter** and **BufferedReader**.
 
 #### Console Design
 - Styled menus with borders and symbols for a polished and easy to read CLI.
 - Displays messages confirming successful actions to improve the user experience.
+
+## Application Screens
+
+### Home Screen
+
+A view of the home screen's menu: 
+![Home screen menu](images/homescreenmenu.png)
+
+### Ledger Menu
+A view of the Ledger Menu: 
+![Ledger Menu](images/ledgermenu.png)
+
+### Reports Menu
+A view of the reports menu:
+![Reports menu](images/reportsmenu.png)
+
 
 
   

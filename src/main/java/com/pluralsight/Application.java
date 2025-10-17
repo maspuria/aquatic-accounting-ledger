@@ -124,14 +124,15 @@ public class Application {
     // method for saving a new transaction to the csv file
     public static void recordNewTransaction(Transaction transaction) { // taking transaction object as parameter
         try {
+            // create a FileWriter object so user can write to the file
             FileWriter writer = new FileWriter("transactions.csv", true);
-            writer.write(transaction.getDate() + "|" +
+            writer.write(transaction.getDate() + "|" + //transaction.getDate() calls getDate() method on transaction object
                     transaction.getTime() + "|" +
                     transaction.getDescription() + "|" +
                     transaction.getVendor() + "|" +
                     transaction.getAmount() + "\n");
             writer.close();
-        } catch (IOException exception) {
+        } catch (IOException exception) { // catch just in case there is input/output error
             System.out.println("Error: an unexpected error occurred ");
         }
 
@@ -139,28 +140,30 @@ public class Application {
 
     // method for new transactions for the current date and time
     public static String[] getCurrentDateTime() {
-        LocalDate date = LocalDate.now();
+        LocalDate date = LocalDate.now(); // gets today's date
         LocalTime time = LocalTime.now();
 
+        //formatters specify the date format/time format
         DateTimeFormatter dateFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter timeFmt = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-        String dateFormatted = date.format(dateFmt);
+        String dateFormatted = date.format(dateFmt); // converts LocalDate to String
         String timeFormatted = time.format(timeFmt);
 
-        return new String[]{dateFormatted, timeFormatted};
+        return new String[]{dateFormatted, timeFormatted}; //(returns a string array [date,time])
     }
 
     // Creating the Ledger Menu
     public static void displayLedgerMenu() {
         boolean running = true;
+
         while (running) {
             System.out.println("\n ╔════════ Ledger Menu ════════╗");
             System.out.println(" ║ (A) Display All Entries ");
-            System.out.println(" ║ (D) Display Deposits "); // only entries that deposits into the account
-            System.out.println(" ║ (P) Display Payments "); // only negative entries (payments)
-            System.out.println(" ║ (R) Reports "); // another menu screen that allows custom searches
-            System.out.println(" ║ (H) Home"); // takes you back to the original home screen menu
+            System.out.println(" ║ (D) Display Deposits "); // only positive entries that deposits into the account
+            System.out.println(" ║ (P) Display Payments "); // only negative entries
+            System.out.println(" ║ (R) Reports Menu"); // another menu screen that allows custom searches
+            System.out.println(" ║ (H) Home");
             System.out.println(" ╚═════════════════════════════╝");
             System.out.print(" Enter choice: ");
 
@@ -168,13 +171,13 @@ public class Application {
 
             switch (choice) {
                 case "A":
-                    runAllEntries();
+                    runAllEntries(); // calls this method to show all entry transactions
                     break;
                 case "D":
-                    runDepositsOnly();
+                    runDeposits(); //only shows deposit transactions
                     break;
                 case "P":
-                    runPaymentsOnly();
+                    runPayments();
                     break;
                 case "R":
                     displayReportsMenu();
@@ -188,22 +191,60 @@ public class Application {
         }
     }
 
-    // Ledger Menu Option (A) Displaying All Entries
+    // method to read all transactions from csv file & returns them as an ArrayList
+    public static ArrayList<Transaction> readTransactions() {
+
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
+            String line;
+
+            reader.readLine(); // important to skip the header of csv file
+
+            while ((line = reader.readLine()) != null) { //keeps reading until readLine() returns null
+
+                String[] parts = line.split("\\|");
+
+                if (parts.length == 5) { // use if statement to make sure there is 5 parts
+                    String date = parts[0].trim(); // index 0 = date
+                    String time = parts[1].trim();
+                    String description = parts[2].trim();
+                    String vendor = parts[3].trim();
+
+                    // parse amount string to double
+                    double amount = Double.parseDouble(parts[4].trim());
+
+                    // creates a new Transaction object with this data and adds it to ArrayList
+                    transactions.add(new Transaction(date, time, description, vendor, amount));
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error reading transactions.csv file: " + e.getMessage());
+        }
+        Collections.reverse(transactions); //newest transactions show first
+        return transactions;
+    }
+
+    // Ledger Menu 1st Option (A) Displaying All Entries
     public static void runAllEntries() {
+        // calls readTransactions() to return an ArrayList of all transaction objects from csv
         ArrayList<Transaction> transactions = readTransactions();
 
         System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
         System.out.println(" ║                         ALL TRANSACTIONS ");
         System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
-        int count = 1;
+
+        int count = 1; // number each transaction
         for (Transaction t : transactions) {
             System.out.println(count + ": " + t);
-            count = count + 1;
+            count++;
         }
     }
 
     // Ledger Menu Option (D) Display Deposits only (positive amounts)
-    public static void runDepositsOnly() {
+    public static void runDeposits() {
+        // reads all transactions from the transactions.csv file
         ArrayList<Transaction> transactions = readTransactions();
 
         System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
@@ -219,7 +260,7 @@ public class Application {
     }
 
     // Ledger Menu Option (P) Displaying Payments only (negative amounts)
-    public static void runPaymentsOnly() {
+    public static void runPayments() {
         ArrayList<Transaction> transactions = readTransactions();
 
         System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
@@ -240,17 +281,16 @@ public class Application {
         boolean running = true;
 
         while (running) {
-            System.out.println("\n ╔════════ Reports Menu ════════╗"); // this menu allows users to run pre-defined reports or run a custom search
+            System.out.println("\n ╔════════ Reports Menu ════════╗");
             System.out.println(" ║ (1) Month to Date ");
             System.out.println(" ║ (2) Previous Month ");
             System.out.println(" ║ (3) Year to Date ");
             System.out.println(" ║ (4) Previous Year ");
-            System.out.println(" ║ (5) Search by Vendor "); // prompt user for vendor name and display all entries for that vendor
-            System.out.println(" ║ (0) Back "); // takes user back to Ledger Menu
+            System.out.println(" ║ (5) Search by Vendor ");
+            System.out.println(" ║ (0) Back ");
             System.out.println(" ╚══════════════════════════════╝");
             System.out.print(" Enter choice: ");
-
-            String choice = scanner.nextLine().trim(); // doesn't need toUpperCase() bc user choice will be numerical entries
+            String choice = scanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
@@ -278,11 +318,10 @@ public class Application {
     }
 
     // Reports Menu option (1) Month to Date
-    public static void runMonthToDate() {
+    public static void runMonthToDate() { // displays all transactions from current month
         ArrayList<Transaction> transactions = readTransactions();
-        ArrayList<Transaction> monthToDate = new ArrayList<>();
-
-        LocalDate currentDate = LocalDate.now();
+        ArrayList<Transaction> monthToDate = new ArrayList<>(); // creates list for previous month's transactions
+        LocalDate currentDate = LocalDate.now(); // gets today's date
         for (Transaction t : transactions) {
             LocalDate entryDate = LocalDate.parse(t.getDate());
 
@@ -317,7 +356,7 @@ public class Application {
         int lastMonthsYear = prevMonthDate.getYear(); // holds the last months year
 
         for (Transaction t : transactions) {
-            LocalDate entryDate = LocalDate.parse(t.getDate().trim());
+            LocalDate entryDate = LocalDate.parse(t.getDate().trim()); //parse transaction date
 
             if (entryDate.getMonthValue() == lastMonth &&
                     entryDate.getYear() == lastMonthsYear) {
@@ -424,30 +463,5 @@ public class Application {
                 count++;
             }
         }
-    }
-
-    public static ArrayList<Transaction> readTransactions() {
-        ArrayList<Transaction> transactions = new ArrayList<>();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
-            String line;
-            reader.readLine();
-
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                if (parts.length == 5) {
-                    String date = parts[0].trim();
-                    String time = parts[1].trim();
-                    String description = parts[2].trim();
-                    String vendor = parts[3].trim();
-                    double amount = Double.parseDouble(parts[4].trim());
-                    transactions.add(new Transaction(date, time, description, vendor, amount));
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Error reading transactions.csv file: " + e.getMessage());
-        }
-        Collections.reverse(transactions);
-        return transactions;
     }
 }
