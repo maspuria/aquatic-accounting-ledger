@@ -16,12 +16,12 @@ public class Application {
         boolean running = true;
 
         while (running) {
-            displayHomeScreenMenu();
+            displayHomeScreenMenu(); // calls method that displays home screen menu
             String choice = scanner.nextLine().trim().toUpperCase();
 
-            switch (choice) {
-                case "D":
-                    runAddDeposit();
+            switch (choice) { // used switch statement rather than if-else statements bc it's more organized for multiple options
+                case "D": // if the user types D
+                    runAddDeposit(); // calls the method that handles adding a deposit
                     break;
                 case "P":
                     runMakePayment();
@@ -38,10 +38,8 @@ public class Application {
                 default:
                     System.out.println("Invalid entry choice. Enter D, P, L, or X. Please try again. ");
             }
-
         }
         scanner.close();
-
     }
 
     // I made my Home Screen Menu into a method so that my main method can be clean and organized
@@ -56,56 +54,59 @@ public class Application {
 
     }
 
-    //Home Screen Menu option (D) Add Deposit Method
+    //Home Screen Menu option (D) Add Deposit Method (money that gets put in)
     public static void runAddDeposit() {
         try {
             System.out.println("\n ════════════════ Add Deposit ═══════════════");
-            System.out.print(" Enter description: "); //ask user for description
+            System.out.print(" Enter description: "); //asks user for description
             String description = scanner.nextLine();
 
-            System.out.print(" Enter vendor: "); // ask user for vendor
+            System.out.print(" Enter vendor: ");
             String vendor = scanner.nextLine();
 
-            System.out.print(" Enter amount: ");//ask user for amount
+            System.out.print(" Enter amount: ");
             double amount = scanner.nextDouble();
-            scanner.nextLine();
+            scanner.nextLine(); // important bc without it, the next nextLine() would read an empty string or skip
 
+            // calls the helper method I created to get the current date and time as an array of two strings
             String[] dateAndTime = getCurrentDateTime();
-            String date = dateAndTime[0];
+            String date = dateAndTime[0]; // first element is the date string
             String time = dateAndTime[1];
 
+            // creates new transaction object & calls transaction constructor
             Transaction deposit = new Transaction(date, time, description, vendor, amount);
-            recordNewTransaction(deposit);
+            recordNewTransaction(deposit); // saves new transaction deposit to csv file
 
             System.out.println("═══════════════════════════════════════════════════════");
             System.out.println("  Thank you for choosing Aquatic Accounting Ledger!");
             System.out.println("  Your Deposit was successfully saved!");
             System.out.println("═══════════════════════════════════════════════════════");
         } catch (Exception exception) {
-            System.out.println("Please try again. Error adding your deposit.");
+            System.out.println("Please try again. There was an error adding your deposit.");
             //exception.printStackTrace();
         }
     }
 
-    //Home Screen Menu option (P) Make Payment (Deposit) Method
+    //Home Screen Menu option (P) Make Payment (Deposit) Method (money going out)
     public static void runMakePayment() {
         try {
             System.out.println("\n════════════════ Make Payment (Deposit) ════════════════");
+
+            System.out.print("Enter description: ");
+            String description = scanner.nextLine();
+
+            System.out.print("Enter vendor: ");
+            String vendor = scanner.nextLine();
+
+            System.out.print("Enter amount: ");
+            double amount = scanner.nextDouble();
+            scanner.nextLine();
+
             String[] dateAndTime = getCurrentDateTime();
             String date = dateAndTime[0];
             String time = dateAndTime[1];
 
-            System.out.print("Enter description: "); //ask user for description
-            String description = scanner.nextLine();
-
-            System.out.print("Enter vendor: "); // ask user for vendor
-            String vendor = scanner.nextLine();
-
-            System.out.print("Enter amount: ");//ask user for amount
-            double amount = scanner.nextDouble();
-            scanner.nextLine();
-
-            amount = amount * -1;
+            amount = amount * -1; // indicates money is leaving the account (a payment)
 
             Transaction deposit = new Transaction(date, time, description, vendor, amount);
             recordNewTransaction(deposit);
@@ -115,13 +116,13 @@ public class Application {
             System.out.println("  Your Payment was successfully saved!");
             System.out.println("═══════════════════════════════════════════════════════");
         } catch (Exception exception) {
-            System.out.println("Please try again. Error adding payment.");
+            System.out.println("Please try again. There was an error adding your payment.");
             //exception.printStackTrace();
         }
     }
 
-    // method for saving a new transaction
-    public static void recordNewTransaction(Transaction transaction) {
+    // method for saving a new transaction to the csv file
+    public static void recordNewTransaction(Transaction transaction) { // taking transaction object as parameter
         try {
             FileWriter writer = new FileWriter("transactions.csv", true);
             writer.write(transaction.getDate() + "|" +
@@ -137,7 +138,7 @@ public class Application {
     }
 
     // method for new transactions for the current date and time
-    private static String[] getCurrentDateTime() {
+    public static String[] getCurrentDateTime() {
         LocalDate date = LocalDate.now();
         LocalTime time = LocalTime.now();
 
@@ -415,10 +416,10 @@ public class Application {
             System.out.println("There are no transactions for the vendor you entered.");
         } else {
             System.out.println("\n ╔════════════════════ Aquatic Accounting Ledger ══════════════════════╗ ");
-            System.out.println(" ║                      Transactions for " + searchByVendor );
+            System.out.println(" ║                      Transactions for " + searchByVendor);
             System.out.println(" ╚═════════════════════════════════════════════════════════════════════╝");
             int count = 1;
-            for (Transaction t: vendorMatches) {
+            for (Transaction t : vendorMatches) {
                 System.out.println(count + ": " + t);
                 count++;
             }
@@ -449,5 +450,4 @@ public class Application {
         Collections.reverse(transactions);
         return transactions;
     }
-
 }
